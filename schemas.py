@@ -11,8 +11,8 @@ Model name is converted to lowercase for the collection name:
 - BlogPost -> "blogs" collection
 """
 
-from pydantic import BaseModel, Field
-from typing import Optional
+from pydantic import BaseModel, Field, EmailStr
+from typing import Optional, Literal
 
 # Example schemas (replace with your own):
 
@@ -41,8 +41,20 @@ class Product(BaseModel):
 # Add your own schemas here:
 # --------------------------------------------------
 
-# Note: The Flames database viewer will automatically:
-# 1. Read these schemas from GET /schema endpoint
-# 2. Use them for document validation when creating/editing
-# 3. Handle all database operations (CRUD) directly
-# 4. You don't need to create any database endpoints!
+class BtechApplication(BaseModel):
+    """
+    B.Tech Program application schema
+    Collection name: "btechapplication"
+    """
+    full_name: str = Field(..., description="Applicant's full name")
+    email: EmailStr = Field(..., description="Applicant email")
+    phone: str = Field(..., min_length=7, max_length=20, description="Contact number")
+    parent_name: Optional[str] = Field(None, description="Parent/Guardian name")
+    city: Optional[str] = Field(None, description="City")
+    state: Optional[str] = Field(None, description="State")
+    grade_level: Literal['11', '12', 'Gap Year', 'Other'] = Field(..., description="Current grade level")
+    stream: Optional[Literal['PCM', 'PCMB', 'Science', 'Commerce', 'Arts', 'Other']] = Field(None, description="Academic stream")
+    program_interest: Optional[str] = Field(None, description="Interested specialization or branch")
+    preferred_intake: Optional[str] = Field(None, description="Preferred intake/session")
+    how_heard: Optional[str] = Field(None, description="How did you hear about us")
+    consent: bool = Field(..., description="Consent to be contacted and to privacy policy")
